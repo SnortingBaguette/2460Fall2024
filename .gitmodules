@@ -1,0 +1,3 @@
+[submodule "UsefulStuff"]
+	path = UsefulStuff
+	url = https://github.com/SnortingBaguette/UsefulStuff
