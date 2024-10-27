@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public float movementSpeed = 15f;
-    public float speedModifier = 3f;
+    public float movementSpeed = 7f;
+    public float speedModifier = 15f;
     public float groundDrag;
     private float horizontalInput;
 
@@ -33,7 +33,6 @@ public class Movement : MonoBehaviour
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode dashKey = KeyCode.LeftShift;
 
-    private bool isDashing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -128,7 +127,7 @@ public class Movement : MonoBehaviour
         if (amountOfDashes < 2 && horizontalInput != 0 && readyToDash)
         {
             dashDirection = horizontalInput;
-            movementSpeed = 15f;
+            movementSpeed = 20f;
             ResetVelocity();
             rb.useGravity = false;
             rb.AddForce(transform.right * 10f * dashDirection, ForceMode.Impulse);
@@ -149,14 +148,17 @@ public class Movement : MonoBehaviour
         yield return jumpDelay;
         readyToDash = true;
         rb.useGravity = true;
-        movementSpeed = 5f;
+        movementSpeed = 7f;
     }
-
-
 
     private void ResetVelocity()
     {
         rb.velocity = new Vector3(0f, 0f, 0f);
     }
 
+    public void ResetDashAndJump()
+    {
+        amountOfDashes = 0;
+        amountOfJumps = 0;
+    }
 }
