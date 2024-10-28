@@ -35,6 +35,8 @@ public class Movement : MonoBehaviour
 
     public Vector3Data teleportPosition;
 
+    public float rbAccel = 1.6f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -66,16 +68,18 @@ public class Movement : MonoBehaviour
             rb.drag = groundDrag;
             amountOfJumps = 0;
             coyoteTime = .15f;
+            rb.mass = 1;
         }
         else
         {
             rb.drag = 0;
             coyoteTime -= Time.deltaTime;
+            rb.mass = rb.mass + rbAccel * Time.deltaTime;
         }
         InputMethod();
         SpeedControl();
                    
-        Debug.Log(amountOfDashes + " " + readyToDash + " " + coyoteTime);
+        
     }
 
     private void FixedUpdate()
@@ -112,6 +116,7 @@ public class Movement : MonoBehaviour
     {
         if (amountOfJumps < 1 && readyToJump)
         {
+            rb.mass = 1f;
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             if(coyoteTime <= 0)
@@ -128,6 +133,7 @@ public class Movement : MonoBehaviour
     {
         if (amountOfDashes < 2 && horizontalInput != 0 && readyToDash)
         {
+            rb.mass = 1;
             dashDirection = horizontalInput;
             movementSpeed = 20f;
             ResetVelocity();
@@ -136,6 +142,8 @@ public class Movement : MonoBehaviour
             amountOfDashes++;
             readyToDash = false;
             StartCoroutine(DashCooldown());
+            readyToJump = false;
+            StartCoroutine(JumpCooldown());
         }
     }
     private IEnumerator JumpCooldown()

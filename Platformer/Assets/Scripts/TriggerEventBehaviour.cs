@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class TriggerEventBehaviour : MonoBehaviour
 {
-    public UnityEvent triggerEnterEvent, onEnableEvent, onDisableEvent, onStartEvent;
+    public UnityEvent triggerEnterEvent, onEnableEvent, onDisableEvent, onStartEvent, triggerLeaveEvent, collisionEnterEvent;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,5 +24,19 @@ public class TriggerEventBehaviour : MonoBehaviour
     {
         onStartEvent.Invoke();
     }
-    
+
+    private void OnTriggerExit(Collider other)
+    {
+        triggerLeaveEvent.Invoke();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player")) 
+        {
+            collisionEnterEvent.Invoke();
+        }
+        
+    }
+
 }

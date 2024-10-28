@@ -1,21 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public GameObject playerTransform;
+    
     public Vector3 cameraOffset = new Vector3(0f, 1.54f, -10f);
-    private Rigidbody playerRb;
+    public GameObject cameraTarget;
+    public GameObject player;
+    private float zoomX;
+    private float zoomY;
+    private Vector3 zoom;
     // Start is called before the first frame update
     void Start()
     {
-        playerRb = playerTransform.GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = playerTransform.transform.position + cameraOffset/* + playerRb.velocity.normalized*/;
+        zoomX = player.transform.position.x - cameraTarget.transform.position.x;
+        zoomY = player.transform.position.y - cameraTarget.transform.position.y;
+        zoom.z = (zoomX + zoomY) * .7f;
+        if(zoom.z >0f)
+        {
+            zoom.z *= -1;
+        }
+        transform.position = cameraTarget.transform.position + cameraOffset + zoom;
+        Debug.Log(zoom.z);
+
     }
 }
