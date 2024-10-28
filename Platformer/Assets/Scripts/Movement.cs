@@ -58,7 +58,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.001f, groundMask);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.1f, groundMask);
         if (grounded)
         {
             rb.drag = groundDrag;
