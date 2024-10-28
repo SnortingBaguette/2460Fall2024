@@ -33,6 +33,8 @@ public class Movement : MonoBehaviour
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode dashKey = KeyCode.LeftShift;
 
+    public Vector3Data teleportPosition;
+
 
     // Start is called before the first frame update
     void Start()
@@ -151,7 +153,7 @@ public class Movement : MonoBehaviour
         movementSpeed = 7f;
     }
 
-    private void ResetVelocity()
+    public void ResetVelocity()
     {
         rb.velocity = new Vector3(0f, 0f, 0f);
     }
@@ -160,5 +162,10 @@ public class Movement : MonoBehaviour
     {
         amountOfDashes = 0;
         amountOfJumps = 0;
+    }
+
+    public void TeleportToLastPos()
+    {
+        transform.position = teleportPosition.value;
     }
 }
