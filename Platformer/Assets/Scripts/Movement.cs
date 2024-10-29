@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Movement : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public class Movement : MonoBehaviour
 
     public float rbAccel = 1.6f;
 
+    public UnityEvent dashStartEvent, dashEndEvent, jumpEvent, groundedEvent,notGroundedEvent;
+    public ParticleSystem walkingParticles;
+
 
     // Start is called before the first frame update
     void Start()
@@ -69,12 +73,15 @@ public class Movement : MonoBehaviour
             amountOfJumps = 0;
             coyoteTime = .15f;
             rb.mass = 1;
+            groundedEvent.Invoke();
+            walkingParticles.startSize = 0.3f * rb.velocity.magnitude;
         }
         else
         {
             rb.drag = 0;
             coyoteTime -= Time.deltaTime;
             rb.mass = rb.mass + rbAccel * Time.deltaTime;
+            notGroundedEvent.Invoke();
         }
         InputMethod();
         SpeedControl();
@@ -114,8 +121,10 @@ public class Movement : MonoBehaviour
 
     private void Jump()
     {
+        
         if (amountOfJumps < 1 && readyToJump)
         {
+            jumpEvent.Invoke();
             rb.mass = 1f;
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -133,6 +142,7 @@ public class Movement : MonoBehaviour
     {
         if (amountOfDashes < 2 && horizontalInput != 0 && readyToDash)
         {
+            dashStartEvent.Invoke();
             rb.mass = 1;
             dashDirection = horizontalInput;
             movementSpeed = 20f;
@@ -159,6 +169,7 @@ public class Movement : MonoBehaviour
         readyToDash = true;
         rb.useGravity = true;
         movementSpeed = 7f;
+        dashEndEvent.Invoke();
     }
 
     public void ResetVelocity()
