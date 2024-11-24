@@ -38,9 +38,9 @@ public class Movement : MonoBehaviour
 
     public float rbAccel = 1.6f;
 
-    public UnityEvent dashStartEvent, dashEndEvent, jumpEvent, groundedEvent,notGroundedEvent;
+    public UnityEvent dashStartEvent, dashEndEvent, jumpEvent, groundedEvent, notGroundedEvent, moveRightEvent, moveLeftEvent, noMoveEvent;
     public ParticleSystem walkingParticles;
-
+    private int animationState = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -106,6 +106,23 @@ public class Movement : MonoBehaviour
         {
             rb.AddForce(moveDirection.normalized * movementSpeed * speedModifier * airMultiplier, ForceMode.Force);
         }
+
+        if(horizontalInput > 0 && animationState != 1)
+        {
+            moveRightEvent.Invoke();
+            animationState = 1;
+        } 
+        else if(horizontalInput < 0 && animationState != 2) 
+        {
+            moveLeftEvent.Invoke();
+            animationState = 2;
+        }
+        else if (horizontalInput == 0 && animationState != 0)
+        {
+            noMoveEvent.Invoke();
+            animationState = 0;
+        }
+        Debug.Log(horizontalInput);
         
     }
 

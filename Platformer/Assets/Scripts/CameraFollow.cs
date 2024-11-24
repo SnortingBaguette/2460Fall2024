@@ -27,7 +27,7 @@ public class CameraFollow : MonoBehaviour
             zoom.z *= -1;
         }
         transform.position = cameraTarget.transform.position + cameraOffset + zoom;
-        Debug.Log(zoom.z);
+
 
     }
 }
