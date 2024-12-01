@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour
 
     public float rbAccel = 1.6f;
 
-    public UnityEvent dashStartEvent, dashEndEvent, jumpEvent, groundedEvent, notGroundedEvent, moveRightEvent, moveLeftEvent, noMoveEvent;
+    public UnityEvent dashStartEvent, dashEndEvent, jumpEvent, groundedEvent, notGroundedEvent, moveRightEvent, turnModelRightEvent, turnModelLeftEvent, moveLeftEvent, noMoveEvent, airborneEvent;
     public ParticleSystem walkingParticles;
     private int animationState = 0;
 
@@ -82,6 +82,7 @@ public class Movement : MonoBehaviour
             coyoteTime -= Time.deltaTime;
             rb.mass = rb.mass + rbAccel * Time.deltaTime;
             notGroundedEvent.Invoke();
+
         }
         InputMethod();
         SpeedControl();
@@ -107,22 +108,81 @@ public class Movement : MonoBehaviour
             rb.AddForce(moveDirection.normalized * movementSpeed * speedModifier * airMultiplier, ForceMode.Force);
         }
 
-        if(horizontalInput > 0 && animationState != 1)
+        if(grounded)
         {
-            moveRightEvent.Invoke();
-            animationState = 1;
-        } 
-        else if(horizontalInput < 0 && animationState != 2) 
-        {
-            moveLeftEvent.Invoke();
-            animationState = 2;
+            if(horizontalInput == 1 && animationState != 1)
+            {
+                moveRightEvent.Invoke();
+                animationState = 1;
+                turnModelRightEvent.Invoke();
+            }
+            else if(horizontalInput == -1 && animationState != -1)
+            {
+                moveLeftEvent.Invoke();
+                animationState = -1; 
+                turnModelLeftEvent.Invoke();
+            }
+            else if(horizontalInput == 0 && animationState != 0)
+            {
+                noMoveEvent.Invoke();
+                animationState = 0;
+            }                                   //Turn the model depending on the input
         }
-        else if (horizontalInput == 0 && animationState != 0)
+        else if (!grounded)
+        {
+
+            if (animationState != 3)
+        {
+            airborneEvent.Invoke();
+            animationState = 3;
+        }
+
+            if(horizontalInput == 1)
+            {
+                turnModelRightEvent.Invoke();
+            }
+            else if(horizontalInput == -1)
+            {
+                turnModelLeftEvent.Invoke();
+            }
+        }
+
+
+        /*if(grounded && animationState != 1)
+            {
+                moveRightEvent.Invoke();
+                animationState = 1;
+            }
+
+        if(horizontalInput == 1 )
+        {
+            turnModelRightEvent.Invoke();
+            if(grounded && animationState != 1)
+            {
+                moveRightEvent.Invoke();
+                animationState = 1;
+            }
+        } 
+        else if(horizontalInput == -1) 
+        {
+            turnModelLeftEvent.Invoke();
+            if(animationState != -1 && grounded)
+            {
+                moveLeftEvent.Invoke();
+                animationState = -1;
+            }
+        }
+        else if (horizontalInput == 0 && animationState != 0 && grounded)
         {
             noMoveEvent.Invoke();
             animationState = 0;
         }
-        Debug.Log(horizontalInput);
+        else if (animationState != 3 && !grounded)
+        {
+            airborneEvent.Invoke();
+            animationState = 3;
+        }
+        Debug.Log(horizontalInput);*/
         
     }
 
